@@ -36,8 +36,8 @@ export default class {
           abdication: '1',
           remainder: '2',
           solution: '0', // 解题方式
-          numberOfPapers: 3, // 试卷数量
-          numberOfPagerColumns: 3, // 试卷列数
+          numberOfPapers: 2, // 试卷数量
+          numberOfPagerColumns: 4, // 试卷列数
           paperTitle: '练习题', // 试卷标题
           paperSubTitle: '姓名：__________ 时间：________ ', // 试卷副标题
           // 试题格式

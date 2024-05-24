@@ -24,7 +24,7 @@ export default defineConfig({
                 }
             }
         }),
-        viteStaticCopy({
+        /*viteStaticCopy({
             silent: true,
             targets: [
                 {
@@ -32,7 +32,7 @@ export default defineConfig({
                     dest: path.resolve(__dirname, 'docs')
                 }
             ]
-        })
+        })*/
     ],
     base:'./',
     build: {
