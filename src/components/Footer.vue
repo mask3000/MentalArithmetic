@@ -11,20 +11,20 @@
 
     <el-tooltip
         class="box-item"
-        content="请作者喝一杯咖啡！"
+        content="打赏"
         placement="top"
     >
       <el-button type="success" :icon="Coffee" size="large" circle @click="centerDialogVisible = true" class="coffee-me fixed right-5 inset-y-1/4 text-lg"/>
     </el-tooltip>
 
-    <el-dialog v-model="centerDialogVisible" title="请作者喝一杯咖啡：）" width="30%" center>
+    <el-dialog v-model="centerDialogVisible" title="打赏" width="30%" center>
       <el-row :gutter="20">
         <el-col :span="12">
           <div class="grid-content ep-bg-purple"/>
-          <img src="@/assets/wx.png" alt="请作者喝咖啡：）"></el-col>
+          <img src="@/assets/wx.png" alt="打赏"></el-col>
         <el-col :span="12">
           <div class="grid-content ep-bg-purple"/>
-          <img src="@/assets/zfb.png" alt="请作者喝咖啡：）"></el-col>
+          <img src="@/assets/zfb.png" alt="打赏"></el-col>
       </el-row>
       <div>
 

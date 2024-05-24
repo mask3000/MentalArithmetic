@@ -2,10 +2,12 @@
   <div :class="{ 'preview': !isPrinting }">
     <div class="A4">
       <div v-for="sheet in sheets" class="sheet padding-10mm" :class="{ 'sheet-shadow': !isPrinting }">
-        <div class="mt-12 mb-12">
-          <h1>{{ sheet.paperTitle }}</h1>
+        <!-- <div class="mt-12 mb-12"> -->
+          <!-- <h1>{{ sheet.paperTitle }}</h1> -->
           <h3>{{ sheet.paperSubTitle }}</h3>
-        </div>
+          <br>
+        <!-- </div> -->
+
         <div class="row">
           <div v-for="col in sheet.columnsOfPaper" :style="`width: ${sheet.colWidth}%;`">
             <p :style="`margin-bottom: ${sheet.rowHeight}`" v-for="f in col">{{ f }}</p>

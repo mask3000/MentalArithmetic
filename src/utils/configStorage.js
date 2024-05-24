@@ -38,8 +38,8 @@ export default class {
           solution: '0', // 解题方式
           numberOfPapers: 3, // 试卷数量
           numberOfPagerColumns: 3, // 试卷列数
-          paperTitle: '小学生口算题', // 试卷标题
-          paperSubTitle: '姓名：__________ 日期：____月____日 时间：________ 对题：____道', // 试卷副标题
+          paperTitle: '练习题', // 试卷标题
+          paperSubTitle: '姓名：__________ 时间：________ ', // 试卷副标题
           // 试题格式
           // min 算数项最小值 max 算数项最大值 operators 与上一步算数项使用的运算符号
           // 第一个算数项由于没有上一步故设置为null

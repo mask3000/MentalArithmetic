@@ -20,7 +20,7 @@ export default defineConfig({
         createHtmlPlugin({
             inject: {
                 data: {
-                    title: '小学数学口算题 | Primary School Mathematics'
+                    title: '练习题'
                 }
             }
         }),

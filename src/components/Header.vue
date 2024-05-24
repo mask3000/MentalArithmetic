@@ -1,7 +1,7 @@
 <template>
   <header>
-    <span class="title">程序设置</span>
-    <span class="sub-title">Primary School Mathematics 小学数学口算题</span>
+    <span class="title">设置</span>
+    <span class="sub-title">setting</span>
   </header>
 </template>
 
