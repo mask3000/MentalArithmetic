@@ -81,7 +81,7 @@
 
     <ElFormItem>
       <ElButton type="success" @click="append">添加题目</ElButton>
-      <ElButton type="danger" @click="clear">清空题目</ElButton>
+      <ElButton v-if="paperList.length" type="danger" @click="clear">清空题目</ElButton>
 
     </ElFormItem>
 

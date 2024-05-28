@@ -19,7 +19,7 @@
 
     <ElFormItem>
       <el-button type="success" @click="append">添加题目</el-button>
-      <el-button type="danger" @click="clear">清空题目</el-button>
+      <el-button v-if="paperList.length" type="danger" @click="clear">清空题目</el-button>
     </ElFormItem>
   </div>
 </template>
