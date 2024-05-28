@@ -1,33 +1,32 @@
 <template>
   <div>
-    <ElFormItem label="几步运算?">
+    <ElFormItem label="最大运算步骤">
       <el-radio-group v-model="formData.step" @change="changeStep">
         <el-radio-button v-for="o in stepOptions" :label="o.key" :disabled="o.disabled">{{ o.label }}</el-radio-button>
       </el-radio-group>
-      <ElButton type="primary" style="margin-left: 6px;" @click="openOptionsDrawer">其他设置</ElButton>
     </ElFormItem>
 
     <template v-for="item, index in formData.formulaList">
-      <ElFormItem v-if="item.operators" :label="`第${index}步运算符号选择`" :prop="`formulaList.${index}.operators`"
+      <ElFormItem v-if="item.operators" :label="`第${index}步运算可能的符号（可多选）`" :prop="`formulaList.${index}.operators`"
         :rules="requiredRule">
         <el-checkbox-group v-model="item.operators">
           <el-checkbox v-for="o in operatorOptions" :label="o.key">{{ o.label }}</el-checkbox>
         </el-checkbox-group>
       </ElFormItem>
 
-      <ElFormItem :label="`算数项${index + 1}`">
+      <ElFormItem :label="`第${index + 1}项取值范围`">
         <ElRow :gutter="8">
           <ElCol :span="8">
             <ElFormItem :prop="`formulaList.${index}.min`" :rules="requiredNumberRule">
               <ElInput v-model.number="item.min">
-                <template #prepend>最小值</template>
+                <template #prepend>最小</template>
               </ElInput>
             </ElFormItem>
           </ElCol>
           <ElCol :span="8">
             <ElFormItem :prop="`formulaList.${index}.max`" :rules="requiredNumberRule">
               <ElInput v-model.number="item.max">
-                <template #prepend>最大值</template>
+                <template #prepend>最大</template>
               </ElInput>
             </ElFormItem>
           </ElCol>
@@ -35,7 +34,7 @@
       </ElFormItem>
     </template>
 
-    <ElFormItem label="运算结果">
+    <ElFormItem label="运算结果范围">
       <ElRow :gutter="8">
         <ElCol :span="8">
           <ElFormItem prop="resultMinValue"
@@ -56,21 +55,25 @@
       </ElRow>
     </ElFormItem>
 
-    <ElFormItem prop="numberOfFormulas"
+    <ElFormItem label="题目数量" prop="numberOfFormulas"
       :rules="[{ required: true, message: '请填写口算题数量' }, { type: 'number', message: '请填写数字' }]">
       <ElRow :gutter="20">
         <ElCol :span="14">
           <ElInput v-model.number="formData.numberOfFormulas">
-            <template #prepend>口算题数量</template>
+            <template #prepend>数量</template>
           </ElInput>
         </ElCol>
       </ElRow>
     </ElFormItem>
 
+    <ElFormItem label="其它">
+      <ElButton @click="openOptionsDrawer">高级设置</ElButton>
+    </ElFormItem>
+
     <ElFormItem>
-      <ElButton type="primary" @click="append">添加口算题</ElButton>
-      <ElButton @click="clear">清空口算题</ElButton>
-      <el-button type="success" @click="addConfiguration">将当前参数保存为配置</el-button>
+      <ElButton type="success" @click="append">添加题目</ElButton>
+      <ElButton type="danger" @click="clear">清空题目</ElButton>
+     <!--<el-button type="success" @click="addConfiguration">将当前参数保存为配置</el-button>--> 
     </ElFormItem>
 
     <OptionsDrawer v-model:visible="optionsDrawerVisible" v-model:formulasFormData="formData" />
@@ -138,9 +141,9 @@ const stepOptions = computed(() => {
   // 多步运算时不能有余数
   const disabled = formData.value.remainder == '3'
   return [
-    { key: '1', label: "一步运算", disabled: false },
-    { key: '2', label: "两步运算", disabled },
-    { key: '3', label: "三步运算", disabled }
+    { key: '1', label: "一步", disabled: false },
+    { key: '2', label: "两步", disabled },
+    { key: '3', label: "三步", disabled }
   ]
 })
 const changeStep = (val) => {

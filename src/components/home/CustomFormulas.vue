@@ -1,7 +1,7 @@
 <template>
   <div>
-    <p class="p-under">可以手动添加题目生成进试卷,比如之前的错题和需要加强的题目。乘法除法填写时可以用
-      <ElTag size="small">*</ElTag> 和 <ElTag size="small">/</ElTag> 代替,程序会自动替换。不需要填写等号。
+    <p class="p-under">乘号、除号可以用
+      <ElTag size="small">*</ElTag> 和 <ElTag size="small">/</ElTag> 代替。不需要写等号。
     </p>
     <ElFormItem v-for="item, index in formData.customFormulaList" :prop="`customFormulaList.${index}.formula`"
       :rules="requiredRule">
@@ -18,8 +18,8 @@
     </ElFormItem>
 
     <ElFormItem>
-      <el-button type="primary" @click="append">添加口算题</el-button>
-      <el-button @click="clear">清空口算题</el-button>
+      <el-button type="success" @click="append">添加题目</el-button>
+      <el-button type="danger" @click="clear">清空题目</el-button>
     </ElFormItem>
   </div>
 </template>

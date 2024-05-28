@@ -20,7 +20,7 @@
           </template>
 
           <template v-if="paperDescriptionList && paperDescriptionList.length">
-            <ElFormItem label="当前口算题包含的内容">
+            <ElFormItem label="当前试卷内容：">
               <div v-for="p in paperDescriptionList">
                 <ElTag style="margin-right: 8px;">{{ p }}</ElTag>
               </div>
@@ -28,8 +28,8 @@
           </template>
         </ElForm>
 
-        <el-button :disabled="!paperList.length" type="primary" size="large" :loading="buttonLoading"
-          @click="generate">点此生成口算题卷子</el-button>
+        <el-button v-if="paperList.length" type="success" :loading="buttonLoading"
+          @click="generate">预览</el-button>
       </ElCol>
       <ElCol :xs="24" :sm="8" :md="8" :lg="8" :xl="8">
         <ConfigurationList v-model:active-index="activeConfigurationId" :configurations="configurations"
@@ -86,7 +86,6 @@ const formData = ref({
 const configurations = ref([])
 
 onMounted(async () => {
-  //console.log('少年，维护世界和平就靠你了')
   document.title = '练习题'
 
   refreshConfiguration()
