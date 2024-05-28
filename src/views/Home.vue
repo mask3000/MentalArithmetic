@@ -97,16 +97,14 @@ const formData = ref({
   fileNameGeneratedRule: fileNameGeneratedRuleEnum.baseOnTitleAndIndex.key
 })
 
-
-
 onMounted(async () => {
-  document.title = '练习题'
+  document.title = '数学练习题生成器'
 })
 
 const paperList = ref([])
 const paperDescriptionList = computed(() => {
   return paperList.value.map(p => {
-    return p.customFormulaList && p.customFormulaList.length ? `自定义口算题${p.numberOfFormulas}道` : `${p.step}步计算题口算题${p.numberOfFormulas}道`
+    return p.customFormulaList && p.customFormulaList.length ? `自定义${p.numberOfFormulas}道` : `${p.step}步计算题${p.numberOfFormulas}道`
   })
 })
 
