@@ -29,7 +29,7 @@ export default class {
         name: '默认',
         data: {
           step: '1', // 几步运算
-          numberOfFormulas: 30, // 口算题数量
+          numberOfFormulas: 50, // 口算题数量
           whereIsResult: '0', // 题型设置
           enableBrackets: false, // 启用括号
           carry: '1',
@@ -48,7 +48,7 @@ export default class {
             { min: 1, max: 9, operators: [1] },
           ],
           resultMinValue: 1, // 试题运行结果最小值
-          resultMaxValue: 9, // 试题运行结果最大值
+          resultMaxValue: 99, // 试题运行结果最大值
           fileNameGeneratedRule: fileNameGeneratedRuleEnum.baseOnTitleAndIndex.key
         }
       }]
