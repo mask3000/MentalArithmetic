@@ -11,8 +11,7 @@
           </ElFormItem>
 
           <template v-if="formData.generateMode == '1'">
-            <AutoGenerateFormulas v-model:formulas-form-data="formData" v-model:papers="paperList" :ref-form="refForm"
-              :configurations="configurations" @add-configuration="addConfiguration" />
+            <AutoGenerateFormulas v-model:formulas-form-data="formData" v-model:papers="paperList" :ref-form="refForm" />
           </template>
 
           <template v-if="formData.generateMode == '2'">
@@ -30,10 +29,7 @@
 
         <el-button v-if="paperList.length" type="success" :loading="buttonLoading"
           @click="generate">预览</el-button>
-      </ElCol>
-      <ElCol :xs="24" :sm="8" :md="8" :lg="8" :xl="8">
-        <ConfigurationList v-model:active-index="activeConfigurationId" :configurations="configurations"
-          @removed="refreshConfiguration" @selected="selectedConfiguration" @reset="refreshConfiguration" />
+
       </ElCol>
     </ElRow>
   </div>
@@ -83,30 +79,10 @@ const formData = ref({
   fileNameGeneratedRule: fileNameGeneratedRuleEnum.baseOnTitleAndIndex.key
 })
 
-const configurations = ref([])
+
 
 onMounted(async () => {
   document.title = '练习题'
-
-  refreshConfiguration()
-  const { data: config } = configurations.value[0] // todo
-
-  formData.value.step = config.step
-  formData.value.numberOfFormulas = config.numberOfFormulas
-  formData.value.whereIsResult = config.whereIsResult
-  formData.value.enableBrackets = config.enableBrackets
-  formData.value.carry = config.carry
-  formData.value.abdication = config.abdication
-  formData.value.remainder = config.remainder
-  formData.value.solution = config.solution
-  formData.value.numberOfPapers = config.numberOfPapers
-  formData.value.numberOfPagerColumns = config.numberOfPagerColumns
-  formData.value.paperTitle = config.paperTitle
-  formData.value.paperSubTitle = config.paperSubTitle
-  formData.value.formulaList = config.formulaList
-  formData.value.resultMinValue = config.resultMinValue
-  formData.value.resultMaxValue = config.resultMaxValue
-  formData.value.fileNameGeneratedRule = config.fileNameGeneratedRule
 })
 
 const paperList = ref([])
@@ -115,36 +91,6 @@ const paperDescriptionList = computed(() => {
     return p.customFormulaList && p.customFormulaList.length ? `自定义口算题${p.numberOfFormulas}道` : `${p.step}步计算题口算题${p.numberOfFormulas}道`
   })
 })
-
-const activeConfigurationId = ref('1')
-const refreshConfiguration = () => {
-  configurations.value = new ConfigStorage().loadAll()
-}
-const addConfiguration = (newId) => {
-  activeConfigurationId.value = newId
-  refreshConfiguration()
-}
-const selectedConfiguration = (configuration) => {
-  console.log(configuration);
-
-  const { data: config } = configuration
-  formData.value.step = config.step
-  formData.value.numberOfFormulas = config.numberOfFormulas
-  formData.value.whereIsResult = config.whereIsResult
-  formData.value.enableBrackets = config.enableBrackets
-  formData.value.carry = config.carry
-  formData.value.abdication = config.abdication
-  formData.value.remainder = config.remainder
-  formData.value.solution = config.solution
-  formData.value.numberOfPapers = config.numberOfPapers
-  formData.value.numberOfPagerColumns = config.numberOfPagerColumns
-  formData.value.paperTitle = config.paperTitle
-  formData.value.paperSubTitle = config.paperSubTitle
-  formData.value.formulaList = config.formulaList
-  formData.value.resultMinValue = config.resultMinValue
-  formData.value.resultMaxValue = config.resultMaxValue
-  formData.value.fileNameGeneratedRule = config.fileNameGeneratedRule
-}
 
 const buttonLoading = ref(false)
 const appStore = useAppStore()

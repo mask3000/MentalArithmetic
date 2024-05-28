@@ -68,12 +68,21 @@
 
     <ElFormItem label="其它">
       <ElButton @click="openOptionsDrawer">高级设置</ElButton>
+      <ElButton @click="openOptionsLoad">本地配置</ElButton>
     </ElFormItem>
+
+    <ElForm v-if="optionsLoadVisible"  :xs="24" :sm="8" :md="8" :lg="8" :xl="8">
+      <el-button @click="addConfiguration">保存当前配置</el-button>
+      
+      <ConfigurationList v-model:visible="optionsLoadVisible" 
+          v-model:active-index="activeConfigurationId" :configurations="configurations"
+          @removed="refreshConfiguration" @selected="selectedConfiguration" @reset="refreshConfiguration" />
+    </ElForm>
 
     <ElFormItem>
       <ElButton type="success" @click="append">添加题目</ElButton>
       <ElButton type="danger" @click="clear">清空题目</ElButton>
-     <!--<el-button type="success" @click="addConfiguration">将当前参数保存为配置</el-button>--> 
+
     </ElFormItem>
 
     <OptionsDrawer v-model:visible="optionsDrawerVisible" v-model:formulasFormData="formData" />
@@ -81,13 +90,15 @@
 </template>
 
 <script setup>
-import { computed, ref, unref, toRaw, getCurrentInstance } from 'vue';
+import { onMounted, computed, ref, unref, toRaw, getCurrentInstance } from 'vue';
 import { v4 as uuidv4 } from "uuid";
 import { cloneDeep } from "lodash";
 import ConfigStorage from '@/utils/configStorage';
-import { OptionsDrawer } from "@/components/home";
+import { OptionsDrawer, ConfigurationList  } from "@/components/home";
 
 const { proxy } = getCurrentInstance()
+
+
 
 const props = defineProps({
   formulasFormData: {
@@ -102,7 +113,7 @@ const props = defineProps({
   configurations: Array
 })
 
-const emit = defineEmits(['update:formulasFormData', 'update:papers', 'add-configuration'])
+const emit = defineEmits(['update:formulasFormData', 'update:papers'])
 
 const formData = computed({
   get() {
@@ -165,6 +176,62 @@ const openOptionsDrawer = () => {
   optionsDrawerVisible.value = true
 }
 
+const configurations = ref([])
+
+const optionsLoadVisible = ref(false)
+const openOptionsLoad = () => {
+  optionsLoadVisible.value = !optionsLoadVisible.value
+}
+
+onMounted(async () => {
+  refreshConfiguration()
+  const { data: config } = configurations.value[0] // todo
+
+  formData.value.step = config.step
+  formData.value.numberOfFormulas = config.numberOfFormulas
+  formData.value.whereIsResult = config.whereIsResult
+  formData.value.enableBrackets = config.enableBrackets
+  formData.value.carry = config.carry
+  formData.value.abdication = config.abdication
+  formData.value.remainder = config.remainder
+  formData.value.solution = config.solution
+  formData.value.numberOfPapers = config.numberOfPapers
+  formData.value.numberOfPagerColumns = config.numberOfPagerColumns
+  formData.value.paperTitle = config.paperTitle
+  formData.value.paperSubTitle = config.paperSubTitle
+  formData.value.formulaList = config.formulaList
+  formData.value.resultMinValue = config.resultMinValue
+  formData.value.resultMaxValue = config.resultMaxValue
+  formData.value.fileNameGeneratedRule = config.fileNameGeneratedRule
+})
+
+const activeConfigurationId = ref('1')
+const refreshConfiguration = () => {
+  configurations.value = new ConfigStorage().loadAll()
+}
+
+const selectedConfiguration = (configuration) => {
+  console.log(configuration);
+
+  const { data: config } = configuration
+  formData.value.step = config.step
+  formData.value.numberOfFormulas = config.numberOfFormulas
+  formData.value.whereIsResult = config.whereIsResult
+  formData.value.enableBrackets = config.enableBrackets
+  formData.value.carry = config.carry
+  formData.value.abdication = config.abdication
+  formData.value.remainder = config.remainder
+  formData.value.solution = config.solution
+  formData.value.numberOfPapers = config.numberOfPapers
+  formData.value.numberOfPagerColumns = config.numberOfPagerColumns
+  formData.value.paperTitle = config.paperTitle
+  formData.value.paperSubTitle = config.paperSubTitle
+  formData.value.formulaList = config.formulaList
+  formData.value.resultMinValue = config.resultMinValue
+  formData.value.resultMaxValue = config.resultMaxValue
+  formData.value.fileNameGeneratedRule = config.fileNameGeneratedRule
+}
+
 const append = () => {
   props.refForm?.validate((valid) => {
     if (!valid) return
@@ -197,7 +264,9 @@ const addConfiguration = () => {
       const newId = uuidv4()
       new ConfigStorage().save(newId, value, toRaw(unref(formData)))
       proxy.$message.success('保存成功!')
-      emit('add-configuration', newId)
+      //emit('add-configuration', newId)
+      activeConfigurationId.value = newId
+      refreshConfiguration()
     })
   })
 }
