@@ -14,17 +14,19 @@
         content="打赏"
         placement="top"
     >
-      <el-button type="success" :icon="Coffee" size="large" circle @click="centerDialogVisible = true" class="coffee-me fixed right-5 inset-y-1/4 text-lg"/>
+    <el-button type="success" :icon="Coffee" size="large" circle @click="centerDialogVisible = true" class="coffee-me fixed right-5 inset-y-1/4 text-lg"/>
     </el-tooltip>
 
     <el-dialog v-model="centerDialogVisible" title="打赏" width="30%" center>
       <el-row :gutter="20">
         <el-col :span="12">
+          <p class="center-text">微信支付</p>
           <div class="grid-content ep-bg-purple"/>
-          <img src="@/assets/wx.png" alt="打赏"></el-col>
+          <img src="@/assets/wx.png" alt="微信"></el-col>
         <el-col :span="12">
+          <p class="center-text">支付宝支付</p>
           <div class="grid-content ep-bg-purple"/>
-          <img src="@/assets/zfb.png" alt="打赏"></el-col>
+          <img src="@/assets/zfb.png" alt="支付宝"></el-col>
       </el-row>
       <div>
 
@@ -45,18 +47,12 @@ const centerDialogVisible = ref(false)
 
 
 const bands = ref([
-  {imageAlt: "Vue-3.2.41", imageSrc: "https://img.shields.io/badge/Vue-3.2.41-blue"},
   {imageAlt: "license-Apache--2.0", imageSrc: "https://img.shields.io/badge/license-Apache--2.0-green"},
   {
     imageAlt: "",
     imageSrc: "https://img.shields.io/badge/Gitee--PrimarySchoolMathematics-red?logo=gitee",
-    link: 'https://gitee.com/J_Sky/PrimarySchoolMathematics'
+    link: 'https://github.com/mask3000/MentalArithmetic'
   },
-  {
-    imageAlt: "",
-    imageSrc: "https://img.shields.io/badge/Github--PrimarySchoolMathematics-green?logo=github",
-    link: 'https://github.com/bosichong/PrimarySchoolMathematics'
-  }
 ])
 </script>
 
@@ -66,5 +62,8 @@ footer {
 }
 .coffee-me{
   font-size: 18px;
+}
+.center-text {
+  text-align: center;
 }
 </style>

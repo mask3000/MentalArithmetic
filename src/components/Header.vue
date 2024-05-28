@@ -1,7 +1,7 @@
 <template>
   <header>
-    <span class="title">设置</span>
-    <span class="sub-title">setting</span>
+    <span class="title">口算练习题生成器</span>
+    <span class="sub-title">by mask3000</span>
   </header>
 </template>
 
