@@ -16,7 +16,7 @@ export function createFormulasGenerator(options, paperList) {
       return pre
     }, [])
 
-    // 补缺
+    // 补全参数
     for (let i = 0; i < 4 - p.formulaList.length; i++) {
       multiSteps.push([1, 9])
       symbols.push([1])

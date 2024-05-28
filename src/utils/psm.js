@@ -58,114 +58,60 @@ const f4 = (s) => {
     return null;
 };
 
+/**
+ * 返回一个整数的个位数
+ * @param {number} number
+ * @return {number}
+ */
+function get_num(number) {
+    let value0 = number / 10;
+    value0 = parseInt(value0);
+    return number - value0 * 10;
+}
 
 /**
- * 算式分解校验器
- * Author: J.sky
- * Mail: bosichong@qq.com
- * @param {string} s 算式
- * @param {number} result 算式结果
- * @param {number} carry 进位
- * @param {number} abdication 借位
- * @param {number} remainder 余数
+ * 判断加法进位
+ * @param {number} a
+ * @param {number} b
  * @return {boolean}
  */
-function validator(s, result, carry, abdication, remainder) {
-    if (isResultOk(s, result)) {
-        if (f1(s)) {
-            s = validator1(s, result, carry, abdication, remainder);
-            if (s) {
-                return validator2(s, result, carry, abdication, remainder);
-            } else {
-                return false;
-            }
-        } else {
-            return validator2(s, result, carry, abdication, remainder);
-        }
+function is_addcarry(a, b) {
+    return (get_num(a) + get_num(b) > 10);
+}
+
+/**
+ * 判断加法无进位
+ * @param {number} a
+ * @param {number} b
+ * @return {boolean}
+ */
+function is_addnocarry(a, b) {
+    return !is_addcarry(a, b);
+}
+
+/**
+ * 判断减法退位
+ * @param {number} a
+ * @param {number} b
+ * @return {boolean}
+ */
+function is_abdication(a, b) {
+    if (get_num(a) < get_num(b)) {
+        return true;
     } else {
         return false;
     }
 }
 
 /**
- * 算式分解校验器提取括号内算式，然后递归给validator2进行算式验证
- * 本方法可以递归提取括号嵌套算式
- * Author: J.sky
- * Mail: bosichong@qq.com
- * @param {string} s 算式
- * @param {number} result 算式结果
- * @param {number} carry 进位
- * @param {number} abdication 借位
- * @param {number} remainder 余数
+ * 判断减法无退位
+ * @param {number} a
+ * @param {number} b
  * @return {boolean}
  */
-function validator1(s, result, carry, abdication, remainder) {
-    while (f1(s)) {
-        const fa = f1(s);
-        const fb = f4(f1(s));
-        const r = validator2(fb, result, carry, abdication, remainder);
-        if (r) {
-            s = s.replace(fa, `${parseInt(parseFloat(r))}`);
-        } else {
-            return false;
-        }
-    }
-    return s;
+function is_noabdication(a, b) {
+    return !is_abdication(a, b);
 }
-
-/**
- * 分解乘除加减法计算结果并校验
- * Author: J.sky
- * Mail: bosichong@qq.com
- * @param {string} s 算式
- * @param {number} result 算式结果
- * @param {number} carry 进位
- * @param {number} abdication 借位
- * @param {number} remainder 余数
- * @return {boolean}
- */
-function validator2(s, result, carry, abdication, remainder) {
-    // 乘除法验证
-    while (f2(s)) {
-        const f = f2(s);
-        if (isMultDivOk(f, result, remainder)) {
-            const r = eval(f);
-            s = s.replace(f, `${parseInt(parseFloat(r))}`);
-        } else {
-            return false;
-        }
-    }
-    // 加减法验证
-    while (f3(s)) {
-        const f = f3(s);
-        if (isAddSub(f, result, carry, abdication)) {
-            const r = eval(f);
-            s = s.replace(f, `${r}`);
-        } else {
-            return false;
-        }
-    }
-    return s;
-}
-
-
-/**
- * 验证算式结果是否正确
- *
- * Author  : J.sky
- * Mail    : bosichong@qq.com
- * @param {string} str 一道算式题
- * @param {Array} result 结果范围
- * @return {boolean}
- */
-const isResultOk = (str, result) => {
-    try {
-        return result[0] <= eval(str) && eval(str) <= result[1];
-    } catch (e) {
-        return false;
-    }
-};
-
 
 const isMultDivOk = (s, result, remainder) => {
     /**
@@ -217,7 +163,6 @@ const isMultDivOk = (s, result, remainder) => {
     }
 };
 
-
 const isAddSub = (s, result, carry, abdication) => {
     /**
      * 判断加减法正确性
@@ -253,30 +198,172 @@ const isAddSub = (s, result, carry, abdication) => {
     }
 };
 
-const getMoreStep = (formulas, result, symbols, step, carry, abdication, remainder, is_bracket, is_result) => {
-    /**
-     * 生成符合规则的口算运算题
-     * @param {Array} formulas 整数算数项
-     * @param {Array} result 最终结果范围
-     * @param {Array} symbols 每步题的算数符号（例 [[1,2],[1,]]  第一个运算符可以为+或-，第二个运算符只能为+）
-     * @param {number} step 步数
-     * @param {number} carry 加法是否进位
-     * @param {number} abdication 减法是否退位
-     * @param {number} remainder 除法余数
-     * @param {number} is_bracket 是否包含括号
-     * @param {number} is_result 求结果，求运算项
-     * @return {string} 一道符合规则的口算运算题
-     */
-    const f = getRandomNum(formulas, step);
-    const question = getPSMstr(f, symbols, step, is_bracket);
+/**
+ * 分解乘除加减法计算结果并校验
+ * Author: J.sky
+ * Mail: bosichong@qq.com
+ * @param {string} s 算式
+ * @param {number} result 算式结果
+ * @param {number} carry 进位
+ * @param {number} abdication 借位
+ * @param {number} remainder 余数
+ * @return {boolean}
+ */
+function validator2(s, result, carry, abdication, remainder) {
+    // 乘除法验证
+    while (f2(s)) {
+        const f = f2(s);
+        if (isMultDivOk(f, result, remainder)) {
+            const r = eval(f);
+            s = s.replace(f, `${parseInt(parseFloat(r))}`);
+        } else {
+            return false;
+        }
+    }
+    // 加减法验证
+    while (f3(s)) {
+        const f = f3(s);
+        if (isAddSub(f, result, carry, abdication)) {
+            const r = eval(f);
+            s = s.replace(f, `${r}`);
+        } else {
+            return false;
+        }
+    }
+    return s;
+}
 
-    if (validator(question, result, carry, abdication, remainder)) {
-        return getXStepstr(question, is_result);
-    } else {
+/**
+ * 算式分解校验器提取括号内算式，然后递归给validator2进行算式验证
+ * 本方法可以递归提取括号嵌套算式
+ * Author: J.sky
+ * Mail: bosichong@qq.com
+ * @param {string} s 算式
+ * @param {number} result 算式结果
+ * @param {number} carry 进位
+ * @param {number} abdication 借位
+ * @param {number} remainder 余数
+ * @return {boolean}
+ */
+function validator1(s, result, carry, abdication, remainder) {
+    while (f1(s)) {
+        const fa = f1(s);
+        const fb = f4(f1(s));
+        const r = validator2(fb, result, carry, abdication, remainder);
+        if (r) {
+            s = s.replace(fa, `${parseInt(parseFloat(r))}`);
+        } else {
+            return false;
+        }
+    }
+    return s;
+}
+
+/**
+ * 验证算式结果是否正确
+ *
+ * Author  : J.sky
+ * Mail    : bosichong@qq.com
+ * @param {string} str 一道算式题
+ * @param {Array} result 结果范围
+ * @return {boolean}
+ */
+const isResultOk = (str, result) => {
+    try {
+        return result[0] <= eval(str) && eval(str) <= result[1];
+    } catch (e) {
         return false;
     }
 };
 
+/**
+ * 算式分解校验器
+ * Author: J.sky
+ * Mail: bosichong@qq.com
+ * @param {string} s 算式
+ * @param {number} result 算式结果
+ * @param {number} carry 进位
+ * @param {number} abdication 借位
+ * @param {number} remainder 余数
+ * @return {boolean}
+ */
+function validator(s, result, carry, abdication, remainder) {
+    if (isResultOk(s, result)) {
+        if (f1(s)) {
+            s = validator1(s, result, carry, abdication, remainder);
+            if (s) {
+                return validator2(s, result, carry, abdication, remainder);
+            } else {
+                return false;
+            }
+        } else {
+            return validator2(s, result, carry, abdication, remainder);
+        }
+    } else {
+        return false;
+    }
+}
+
+
+/**
+ * 根据所给的数值范围，步数，返回合法的数值。
+ * @param {Array} list
+ * @param {number} step
+ * @return {Array}
+ */
+function getRandomNum(list, step) {
+    let newList = [];
+    for (let i = 0; i < step + 1; i++) {
+        newList.push(Math.floor(Math.random() * (list[i][1] - list[i][0] + 1) + list[i][0]));
+    }
+    return newList;
+}
+
+/**
+ * 返回一组运算符号
+ * @param {Array} symbols 每步题的算数符号（例 [[1,2],[1,]]  第一个运算符可以为+或-，第二个运算符只能为+）
+ * @param {number} step 运算步
+ * @return {Array}
+ */
+function getRandomSymbols(symbols, step) {
+    let newList = [];
+    for (let i = 0; i < step; i++) {
+        let index = Math.floor(Math.random() * symbols[i].length);
+        newList.push(symbols[i][index]);
+    }
+    return newList;
+}
+
+/**
+ * 获得运算符号，用来运算结果
+ * @param {number} sym
+ * @return {string}
+ */
+function getSymbol(sym) {
+    if (sym == 1) {
+        return "+";
+    } else if (sym == 2) {
+        return "-";
+    } else if (sym == 3) {
+        return "*";
+    } else if (sym == 4) {
+        return "/";
+    }
+}
+
+function getRandomBracket(step) {
+    /**
+     * 返回一个括号起始随机数
+     * @param {number} step
+     * @return {number}
+     */
+    while (true) {
+        const k = Math.floor(Math.random() * (step * 2 + 1 - 3)); // 获得一个括号起始指针
+        if (k % 2 === 0) {
+            return k;
+        }
+    }
+}
 
 function getPSMstr(formulas, symbols, step, is_bracket) {
     /**
@@ -310,21 +397,33 @@ function getPSMstr(formulas, symbols, step, is_bracket) {
     return ss;
 }
 
-function getRandomBracket(step) {
-    /**
-     * 返回一个括号起始随机数
-     * @param {number} step
-     * @return {number}
-     */
-    while (true) {
-        const k = Math.floor(Math.random() * (step * 2 + 1 - 3)); // 获得一个括号起始指针
-        if (k % 2 === 0) {
-            return k;
-        }
+/**
+ * 更换乘除法符号
+ * @param {string} s
+ * @return {string}
+ */
+function repSymStr(s) {
+    if (/\*/.test(s)) {
+        s = s.replace(/\*/g, "×");
     }
+    if (/\//.test(s)) {
+        s = s.replace(/\//g, "÷");
+    }
+    return s;
 }
 
-// 2步算式相关判断设置
+/**
+ * 把得到的算式转变成求算数项口算题
+ * @param {string} sr 一道算数题
+ * @return {string}
+ */
+function getRandomItem(sr) {
+    let p = /\d+/g;
+    let sc = sr.match(p);
+    let i = Math.floor(Math.random() * (sc.length - 1)); // -1防止替换结果
+    sr = sr.replace(sc[i], "__");
+    return sr;
+}
 
 /**
  * 给定一组算式和其结果，根据条件生成求结果或是求算数项的题型
@@ -342,176 +441,29 @@ function getXStepstr(src, is_result) {
     }
 }
 
+const getMoreStep = (formulas, result, symbols, step, carry, abdication, remainder, is_bracket, is_result) => {
+    /**
+     * 生成符合规则的口算运算题
+     * @param {Array} formulas 整数算数项
+     * @param {Array} result 最终结果范围
+     * @param {Array} symbols 每步题的算数符号（例 [[1,2],[1,]]  第一个运算符可以为+或-，第二个运算符只能为+）
+     * @param {number} step 步数
+     * @param {number} carry 加法是否进位
+     * @param {number} abdication 减法是否退位
+     * @param {number} remainder 除法余数
+     * @param {number} is_bracket 是否包含括号
+     * @param {number} is_result 求结果，求运算项
+     * @return {string} 一道符合规则的口算运算题
+     */
+    const f = getRandomNum(formulas, step);
+    const question = getPSMstr(f, symbols, step, is_bracket);
 
-/**
- * 更换乘除法符号
- * @param {string} s
- * @return {string}
- */
-function repSymStr(s) {
-    if (/\*/.test(s)) {
-        s = s.replace(/\*/g, "×");
-    }
-    if (/\//.test(s)) {
-        s = s.replace(/\//g, "÷");
-    }
-    return s;
-}
-
-
-/**
- * 把得到的算式转变成求算数项口算题
- * @param {string} sr 一道算数题
- * @return {string}
- */
-function getRandomItem(sr) {
-    let p = /\d+/g;
-    let sc = sr.match(p);
-    let i = Math.floor(Math.random() * (sc.length - 1)); // -1防止替换结果
-    sr = sr.replace(sc[i], "__");
-    return sr;
-}
-
-
-/**
- * 获得运算符号，用来运算结果
- * @param {number} sym
- * @return {string}
- */
-function getSymbol(sym) {
-    if (sym == 1) {
-        return "+";
-    } else if (sym == 2) {
-        return "-";
-    } else if (sym == 3) {
-        return "*";
-    } else if (sym == 4) {
-        return "/";
-    }
-}
-
-/**
- * 返回一组运算符号
- * @param {Array} symbols 每步题的算数符号（例 [[1,2],[1,]]  第一个运算符可以为+或-，第二个运算符只能为+）
- * @param {number} step 运算步
- * @return {Array}
- */
-function getRandomSymbols(symbols, step) {
-    let newList = [];
-    for (let i = 0; i < step; i++) {
-        let index = Math.floor(Math.random() * symbols[i].length);
-        newList.push(symbols[i][index]);
-    }
-    return newList;
-}
-
-
-/**
- * 判断加法进位
- * @param {number} a
- * @param {number} b
- * @return {boolean}
- */
-function is_addcarry(a, b) {
-    return (get_num(a) + get_num(b) > 10);
-}
-
-/**
- * 判断加法无进位
- * @param {number} a
- * @param {number} b
- * @return {boolean}
- */
-function is_addnocarry(a, b) {
-    return !is_addcarry(a, b);
-}
-
-/**
- * 判断减法退位
- * @param {number} a
- * @param {number} b
- * @return {boolean}
- */
-function is_abdication(a, b) {
-    if (get_num(a) < get_num(b)) {
-        return true;
+    if (validator(question, result, carry, abdication, remainder)) {
+        return getXStepstr(question, is_result);
     } else {
         return false;
     }
-}
-
-/**
- * 判断减法无退位
- * @param {number} a
- * @param {number} b
- * @return {boolean}
- */
-function is_noabdication(a, b) {
-    return !is_abdication(a, b);
-}
-
-/**
- * 判断乘法和乘法是否存在进位
- * @param {number} a
- * @param {number} b
- * @return {boolean}
- */
-function is_multcarry(a, b) {
-    if (get_num(a) * get_num(b) < 10) {
-        return false;
-    } else {
-        return true;
-    }
-}
-
-/**
- * 判断一个数是否为整数
- * @param {number} num
- * @return {boolean}
- */
-function is_int(num) {
-    return Number.isInteger(num);
-}
-
-/**
- * 返回一个整数的个位数
- * @param {number} number
- * @return {number}
- */
-function get_num(number) {
-    let value0 = number / 10;
-    value0 = parseInt(value0);
-    return number - value0 * 10;
-}
-
-/**
- * 根据所给的数值范围，步数，返回合法的数值。
- * @param {Array} list
- * @param {number} step
- * @return {Array}
- */
-function getRandomNum(list, step) {
-    let newList = [];
-    for (let i = 0; i < step + 1; i++) {
-        newList.push(Math.floor(Math.random() * (list[i][1] - list[i][0] + 1) + list[i][0]));
-    }
-    return newList;
-}
-
-/**
- * 定义一个程序运行时间计算装饰器无返回结果
- * @param {function} func
- * @return {function}
- */
-function get_time(func) {
-    return function (...args) {
-        let start = performance.now();
-        func.apply(this, args);
-        let end = performance.now();
-        console.log(`程序运行时间:${end - start}ms`);
-    };
-}
-
+};
 
 export default class FormulasGenerator {
     /**
@@ -529,7 +481,7 @@ export default class FormulasGenerator {
      */
     constructor(addattrs, subattrs, multattrs, divattrs, step, number, is_result, is_bracket, multistep, symbols) {
         if (step === undefined) {
-            throw new Error("required param signum is missing or signum is None");
+            step = 1;
         }
         if (![1, 2, 3].includes(step)) {
             throw new Error("param signum must be 1 or 2 or 3");
