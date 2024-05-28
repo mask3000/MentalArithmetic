@@ -30,6 +30,22 @@
         <el-button v-if="paperList.length" type="success" :loading="buttonLoading"
           @click="generate">预览</el-button>
 
+        <el-button v-if="paperList.length" type="primary" @click="centerDialogVisible = true">打赏</el-button>
+        <el-dialog v-model="centerDialogVisible" title="打赏" width="30%" center>
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <p class="center-text">微信支付</p>
+              <div class="grid-content ep-bg-purple"/>
+              <img src="@/assets/wx.png" alt="微信">
+            </el-col>
+            <el-col :span="12">
+              <p class="center-text">支付宝支付</p>
+              <div class="grid-content ep-bg-purple"/>
+              <img src="@/assets/zfb.png" alt="支付宝">
+            </el-col>
+          </el-row>
+        </el-dialog>
+
       </ElCol>
     </ElRow>
   </div>
@@ -49,6 +65,8 @@ import { createFormulasGenerator } from '@/utils/paperGenerator';
 const { proxy } = getCurrentInstance()
 
 const refForm = ref(null)
+
+const centerDialogVisible = ref(false)
 
 const formData = ref({
   step: '1', // 几步运算

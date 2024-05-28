@@ -9,13 +9,13 @@
       </p>
     </template>
 
-    <el-tooltip
+    <!--el-tooltip
         class="box-item"
         content="打赏"
         placement="top"
     >
     <el-button type="success" :icon="Coffee" size="large" circle @click="centerDialogVisible = true" class="coffee-me fixed right-5 inset-y-1/4 text-lg"/>
-    </el-tooltip>
+    </el-tooltip-->
 
     <el-dialog v-model="centerDialogVisible" title="打赏" width="30%" center>
       <el-row :gutter="20">
@@ -29,8 +29,6 @@
           <img src="@/assets/zfb.png" alt="支付宝"></el-col>
       </el-row>
       <div>
-
-
       </div>
     </el-dialog>
 
@@ -44,7 +42,6 @@ import {
 } from '@element-plus/icons-vue'
 
 const centerDialogVisible = ref(false)
-
 
 const bands = ref([
   {imageAlt: "license-Apache--2.0", imageSrc: "https://img.shields.io/badge/license-Apache--2.0-green"},
