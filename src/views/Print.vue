@@ -175,7 +175,7 @@ h3 {
 }
 
 p {
-  @apply text-sm;
+  @apply text-base;
   margin-right: 20%;
 }
 
