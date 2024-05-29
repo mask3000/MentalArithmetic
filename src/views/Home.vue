@@ -31,15 +31,15 @@
           @click="generate">预览</el-button>
 
         <el-button v-if="paperList.length" type="primary" @click="centerDialogVisible = true">打赏</el-button>
-        <el-dialog v-model="centerDialogVisible" title="打赏" width="30%" center>
+        <el-dialog v-model="centerDialogVisible" title="打赏" width="90%" center>
           <el-row :gutter="20">
             <el-col :span="12">
-              <p class="center-text">微信支付</p>
+              <p class="center-text" center>微信支付</p>
               <div class="grid-content ep-bg-purple"/>
               <img src="@/assets/wx.png" alt="微信">
             </el-col>
             <el-col :span="12">
-              <p class="center-text">支付宝支付</p>
+              <p class="center-text" center>支付宝支付</p>
               <div class="grid-content ep-bg-purple"/>
               <img src="@/assets/zfb.png" alt="支付宝">
             </el-col>
@@ -129,4 +129,8 @@ const generate = () => {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.center-text {
+  text-align: center;
+}
+</style>
